@@ -16,6 +16,10 @@ value là chỉ số để đánh giá mức độ gần đúng của chuỗi đ
 
 //============= ALGORITHM ===========
 
+//Hàm này tính core (độ gần đúng) của mỗi chuỗi trong mảng strArr
+//tham số đầu tiên str chỉ ra search input, kiểu chuỗi
+//tham số thứ 2 strArr là mảng các phần tử kiểu object {id: string, val: string}
+//return về 1 mảng các object {id: string, core: number}
 function searchStringAlgorithm(str, strArr) {
 	var resultArr =[]; //element as {id: xxx, core: yyy}
 	
@@ -92,7 +96,7 @@ var strArr = [
 
 //=========== MAIN ==============
 
-var mySearch = "viet";
+var mySearch = "web";
 
 var idArr = searchStringAlgorithm(mySearch, strArr);
 idArr.forEach (function (element) {
