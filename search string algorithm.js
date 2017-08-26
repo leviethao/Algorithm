@@ -1,4 +1,6 @@
 /*
+THUẬT TOÁN TÌM CHUỖI GẦN ĐÚNG
+
 ALGORITHM DESCRIPTION
 Xét chuỗi nguồn (từ input) và 1 mảng các chuỗi đích(chuỗi có sẵn trong database)
 -Giả sử mỗi chuỗi đích có 1 id để phân biệt
