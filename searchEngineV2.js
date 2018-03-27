@@ -7,25 +7,25 @@
 
 //========= ALGORITHM DESCRIPTION =========
 /*
-* Use the structure {_id: number, strValue: string, core: number} to store the data
+* Use the structure {_id: number, strValue: string, score: number} to store the data
 * Load data from the database (mongodb), convert data to table structure (self-defined structure),
 * save table objects on global variables.
 * Search for approximate strings based on the data of the global variables of the table
-* Accuracy of approximate strings, saving the calculated results to the core of the object 
+* Accuracy of approximate strings, saving the calculated results to the score of the object 
 * containing the string, the higher the string, the higher the level of accuracy.
-* Arrange approximate sequences in descending order of precision (core)
+* Arrange approximate sequences in descending order of precision (score)
 * The result returned is an array of objects that contain sorted sequences that reduce the precision
 */
 
 //========= MÔ TẢ THUẬT TOÁN ==============
 /*
-*Sử dụng cấu trúc {_id: number, strValue: string, core: number} để lưu trữ dữ liệu
+*Sử dụng cấu trúc {_id: number, strValue: string, score: number} để lưu trữ dữ liệu
 *Load dữ liệu từ database (mongodb), chuyển đổi dữ liệu sang cấu trúc table (cấu trúc 
 *tự định nghĩa), lưu đối tượng table trên biến toàn cục
 *Tìm kiếm các chuỗi gần đúng dựa trên dữ liệu của biến toàn cục table
-*Tính độ chính xác cho các chuỗi gần đúng, lưu kết quả tính được vào thuộc tính core
-*của đối tượng chứa chuỗi, chuỗi có core càng cao thì mức độ chính xác càng cao
-*Sắp xếp các chuỗi gần đúng theo thứ tự giảm dần độ chính xác (core)
+*Tính độ chính xác cho các chuỗi gần đúng, lưu kết quả tính được vào thuộc tính score
+*của đối tượng chứa chuỗi, chuỗi có score càng cao thì mức độ chính xác càng cao
+*Sắp xếp các chuỗi gần đúng theo thứ tự giảm dần độ chính xác (score)
 *Kết quả trả về là 1 mảng các đối tượng chứa chuỗi đã được sắp xếp giảm dần độ chính xác
 */
 
@@ -131,14 +131,14 @@ function loadDatabase(collectionName, callback) {
 	});
 }
 
-//Compute the core of elements in data array, the core property represent the
+//Compute the score of elements in data array, the score property represent the
 //precision between it self and the string search
 //The first parameter is string search input
 //The second parameter is data array (that received from callback of searchInTable function)
 //The last parameter is callback function that have 1 parameter is result (a array of elements 
 //have sorted in decreasing order precision)
 //no return value
-function computeCoreAndSort(strSearch, dataArr, callback) {
+function computeScoreAndSort(strSearch, dataArr, callback) {
 	//check valid
 	if (strSearch == undefined) {
 		return console.log(new Error("strSearch is undefined"));
@@ -154,28 +154,28 @@ function computeCoreAndSort(strSearch, dataArr, callback) {
 		wordArr[i] = wordArr[i].trim();
 	}
 	
-	//through all element in dataArr and mark it with a core that
+	//through all element in dataArr and mark it with a score that
 	//represent the precision with string search
 	for (let i = 0; i < dataArr.length; i++) {
 		var keywords = dataArr[i].strValue.split(" ");
-		var core = 0;
+		var score = 0;
 		for (let word of wordArr) {
 			for (let key of keywords) {
-				if (key == word) core += 1.5 * core + 1; //(ax + b) to ensure precision
+				if (key == word) score += 1.5 * score + 1; //(ax + b) to ensure precision
 			}											 //exp: string search is: "internet of things"
 		}												 // then "internet of future" more accurate "internet"
 		
-		//divide the core by the length of string to ensure precision
-		if (core > 0) {
-			core /= dataArr[i].strValue.length;
+		//divide the score by the length of string to ensure precision
+		if (score > 0) {
+			score /= dataArr[i].strValue.length;
 		}
 		
-		dataArr[i].core = core;
+		dataArr[i].score = score;
 	}
 	
-	//sort array that computed core in decreasing order of core
+	//sort array that computed score in decreasing order of score
 	dataArr.sort(function (a, b) {
-		return b.core - a.core;
+		return b.score - a.score;
 	});
 	
 	callback(dataArr);
